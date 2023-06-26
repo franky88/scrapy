@@ -28,14 +28,13 @@ class ScrapyView(View):
             for link in all_links:
                 product_title = link.a.p.string
                 link = link.a["href"]
-                # datasample["product_title"] = link.a.p.string
-                # datasample["link"] = link.a["href"]
-                print(link)
+                plink = "https://www.rebelgunworks.com.au" + link
                 # datasample.append(product_title)
-                datasample.append(link)
-                    # print(datasample)
-
-            # print(datasample)
+                datasample.append(plink)
+                dis = requests.get(plink, headers=headers)
+                sample = BeautifulSoup(dis.text, "html.parser")
+                all_dis = sample.find_all("p", class_="tap")
+                print(all_dis)
             context = {
                 "title": "scrapy",
                 "alllinks": datasample,
