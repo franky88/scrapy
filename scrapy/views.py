@@ -21,13 +21,23 @@ class ScrapyView(View):
             }
             productURL = requests.get(url_queries, headers=headers)
             doc = BeautifulSoup(productURL.text, "html.parser")
-            all_links = doc.find_all("a", class_="product-grid-item")
+            all_links = doc.find_all("div", class_="large--one-quarter")
             # print(all_links)
+            # print(all_links.find("a"))
+            datasample = list()
             for link in all_links:
-                link = link.string
+                product_title = link.a.p.string
+                link = link.a["href"]
+                # datasample["product_title"] = link.a.p.string
+                # datasample["link"] = link.a["href"]
                 print(link)
+                # datasample.append(product_title)
+                datasample.append(link)
+                    # print(datasample)
+
+            # print(datasample)
             context = {
                 "title": "scrapy",
-                "alllinks": link,
+                "alllinks": datasample,
             }
             return render(request, self.template_name, context)
