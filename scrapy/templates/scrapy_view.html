@@ -1,22 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!--<h2>Hello this page is working!!!</h2>-->
-<!--<form action="" method="get">-->
-<!--    <input type="text" name="q">-->
-<!--    <input type="submit" value="Submit">-->
-<!--</form>-->
 <div class="row">
     <div class="col-sm-12">
-        <div class="card mb-3">
+        <div class="card mb-3 mt-3">
             <div class="card-body">
                 <div class="url-input-title">
                     <h3>URL Input</h3>
                 </div>
                 <div class="url-input-body">
-                    <form action="" method="get">
-                        <input style="width: 20rem;" type="text" name="q">
-                        <input type="submit" value="Submit">
+                    <form action="{% url 'scrapy:create_link' %}" method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
                 </div>
             </div>
@@ -25,17 +21,57 @@
 </div>
 <div class="row">
     <div class="col-sm-12">
-        <div class="row row-cols-1 row-cols-md-2 g-4">
-            {% for link in alllinks %}
-            <div class="col">
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <a href="{{ link }}" class="btn btn-outline-primary btn-sm">View product</a>
-                  </div>
-                </div>
+        <div class="card mb-3">
+            <div class="card-body">
+                <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Links</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for link in links %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ link.url }}</td>
+                            <td>
+                                <a href="{% url 'scrapy:pages' link.pk %}" class="btn btn-outline-primary btn-sm">View pages</a>
+                                <a href="{% url 'scrapy:delete' link.pk %}" class="float-end">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            {% endfor %}
+        </div>
+        
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-sm table-striped">
+                    <tbody>
+                        {% for link in pages %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{link}}</td>
+                            <td>
+                                {% if not link.is_done %}
+                                <a href="{% url 'scrapy:product_pages' link.pk %}" class="float-start">Scrap products</a>
+                                <a type="button" class="btn btn-outline-success btn-sm float-end" href="{% url 'scrapy:completed' link.pk %}">Done</a>
+                                {% else %}
+                                Scrap completed
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>  
         </div>
     </div>
 </div>
