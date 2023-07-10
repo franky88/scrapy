@@ -4,7 +4,7 @@ from django.db.models.signals import pre_save, post_save
 
 # Create your models here.
 class URLaddress(models.Model):
-    url = models.CharField(max_length=120)
+    url = models.CharField(max_length=255)
     timestamp = models.DateTimeField(auto_now_add=True)
     class Meta:
         verbose_name_plural = 'URL addresses'
@@ -23,7 +23,7 @@ class Page(models.Model):
     
 class Product(models.Model):
     page = models.ForeignKey(Page, on_delete=models.CASCADE)
-    name = models.CharField(max_length=120, unique=False)
+    name = models.TextField(unique=False)
     link = models.URLField()
     disclosure = models.TextField(verbose_name="disclosure", null=True, blank=True)
 
